@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Wishlist</h2>
+    {% if user.is_authenticated %}
+        <h3>Your wishlist</h3>
+    {% else %}
+        <h3>You must be logged in to see your wishlist</h3>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+    <div>
+        {% for wish in wishlist %}
+        <div>
+            <a href="{% url 'listing' wish.item.id %}">
+                <div>
+                    {% if wish.item.image %}
+                        <img src="{{ wish.item.image }}" alt="{{ wish.item.title }}">
+                    {% else %}
+                        <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                    {% endif %}
+                </div>
+                <div>
+                    <p>{{ wish.item.title }}</p>
+                    <p>{{ wish.item.description }}</p>
+                    <p>{{ wish.item.seller }}</p>
+                    {% if wish.item.current_price %}
+                        <p>Current Price: £{{ wish.item.current_price|floatformat:2 }}</p>
+                    {% else %}
+                        <p>Current Price: £{{ wish.item.start_price|floatformat:2 }}</p>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% empty %}
+            <p>Your wishlist is empty</p>
+        {% endfor %}
+    </div>
+{% endblock %}

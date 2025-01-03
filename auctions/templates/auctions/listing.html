@@ -1,0 +1,100 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% if highest_bid.buyer == user and not is_listing_active %}
+        <h2>Congratulations {{ user }}, you won this auction!</h2>
+    {% endif %}
+    {% if not is_listing_active %}
+        <h2>This auction ended</h2>
+    {% endif %}
+    <section>
+        {% if user.is_authenticated %}
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                {{ wishlist_form }}
+                {% if wishlist %}
+                    <input type="submit" value="Remove from Wishlist">
+                {% else %}
+                    <input type="submit" value="Add to Wishlist">
+                {% endif %}
+            </form>
+            {% if listing.seller == user and is_listing_active %}
+                <form action="{% url 'listing' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{ end_form }}
+                    <input type="submit" value="End Auction">
+                </form>
+            {% endif %}
+        {% endif %}
+        <h3>{{ listing.title }}</h3>
+        <div>
+            <p>Category: {{ listing.category }}</p>
+            <div>
+                {% if listing.image %}
+                    <img src="{{ listing.image }}" alt="{{ listing.title }}">
+                {% else %}
+                    <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                {% endif %}
+            </div>
+            {% if listing.description %}
+                <section>
+                    <h4>Description</h4>
+                    <p>{{ listing.description }}</p>
+                </section>
+            {% endif %}
+            <section>
+                <h4>Details</h4>
+                <ul>
+                    <li>Item reference: {{ listing.id }}</li>
+                    <li>Seller: {{ listing.seller }}</li>
+                    <li>Auction start: {{ listing.start }}</li>
+                    <li>Auction end: {{ listing.end }}</li>
+                </ul>
+                {% if highest_bid %}
+                    <p>Highest bid: £{{ highest_bid.bid|floatformat:2 }}</p>
+                    <p>Buyer: {{ highest_bid.buyer }}</p>
+                {% else %}
+                    <p>Starting Price: £{{ listing.start_price|floatformat:2 }}</p>
+                {% endif %}
+            </section>
+        </div>
+    </section>
+    <section>
+        {% if is_listing_active %}
+            <h3>Enter your bid</h3>
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                {{ bid_form }}
+                {% if error_message %}
+                    <ul class="errorlist">
+                        <li>{{ error_message }}</li>
+                    </ul>
+                {% endif %}
+                <input type="submit" value="Place bid">
+            </form>
+        {% endif %}
+    </section>
+    <section>
+        <h3>Comments</h3>
+        <div>
+            {% for comment in comments %}
+                <div>
+                    <div>{{ comment.user }} on {{ comment.date }}, wrote:</div>
+                    <p>{{ comment.content }}</p>
+                </div>
+            {% empty %}
+                <p>No one left a comment yet.</p>
+            {% endfor %}
+        </div>
+        {% if user.is_authenticated and is_listing_active %}
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                {{ comment_form }}
+                <input type="submit" value="Add Comments">
+            </form>
+        {% elif is_listing_active %}
+            <p>You must be logged in to leave a comment.</p>
+        {% endif %}
+    </section>
+{% endblock %}

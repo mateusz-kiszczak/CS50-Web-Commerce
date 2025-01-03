@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <section>
+        <h2>Ended Listings</h2>
+        <div>
+            {% for listing in listings %}
+                <a href="{% url 'listing' listing.id %}">
+                    <div>
+                        {% if listing.image %}
+                            <img src="{{ listing.image }}" alt="{{ listing.title }}">
+                        {% else %}
+                            <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p>{{ listing.title }}</p>
+                        <p>{{ listing.description }}</p>
+                        <p>{{ listing.seller }}</p>
+                        {% if listing.current_price %}
+                            <p>Current Price: £{{ listing.current_price|floatformat:2 }}</p>
+                        {% else %}
+                            <p>Current Price: £{{ listing.start_price|floatformat:2 }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

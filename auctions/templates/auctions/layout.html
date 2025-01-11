@@ -4,49 +4,68 @@
 <html lang="en">
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
-    <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'past' %}">Past Listings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'create' %}">Create a Listing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
-        <hr>
+    <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+        <header class="bg-gradient-to-r from-teal-950 via-teal-900 to-teal-700">
+            <div class="p-8 flex flex-col gap-8 md:px-16 lg:max-w-6xl lg:mx-auto">
+                <div class="flex flex-row justify-between items-center">
+                    <h1 class="text-4xl uppercase font-mono font-extrabold text-white">Auctions</h1>
+                    <p class="text-white">
+                        {% if user.is_authenticated %}
+                        Signed in as <strong class="text-lime-300">{{ user.username }}</strong>.
+                        {% else %}
+                        Not signed in.
+                        {% endif %}
+                    </p>
+                </div>
+                <nav>
+                    <ul class="flex flex-row gap-8 flex-wrap">
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'past' %}">Past Listings</a>
+                        </li>
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'create' %}">Create a Listing</a>
+                        </li>
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'categories' %}">Categories</a>
+                        </li>
+
+                        {% if user.is_authenticated %}
+
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'wishlist' %}">Wishlist</a>
+                        </li>
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+
+                        {% else %}
+
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li>
+                            <a class="text-white font-semibold uppercase no-underline transition hover:text-lime-200" href="{% url 'register' %}">Register</a>
+                        </li>
+
+                        {% endif %}
+                    </ul>
+
+                </nav>
+            </div>
+        </header>
+
         {% block body %}
         {% endblock %}
+
+        <footer class="bg-gradient-to-r from-teal-950 via-teal-900 to-teal-700 p-8">
+            <small class="block text-white text-center w-full">Actions - 2025 - CS50W</small>
+        </footer>
+
     </body>
 </html>

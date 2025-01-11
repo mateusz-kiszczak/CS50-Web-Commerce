@@ -2,99 +2,130 @@
 {% load static %}
 
 {% block body %}
-    {% if highest_bid.buyer == user and not is_listing_active %}
-        <h2>Congratulations {{ user }}, you won this auction!</h2>
-    {% endif %}
-    {% if not is_listing_active %}
-        <h2>This auction ended</h2>
-    {% endif %}
-    <section>
-        {% if user.is_authenticated %}
-            <form action="{% url 'listing' listing.id %}" method="post">
-                {% csrf_token %}
-                {{ wishlist_form }}
-                {% if wishlist %}
-                    <input type="submit" value="Remove from Wishlist">
-                {% else %}
-                    <input type="submit" value="Add to Wishlist">
-                {% endif %}
-            </form>
-            {% if listing.seller == user and is_listing_active %}
+
+    <section class="w-full lg:max-w-6xl mx-auto py-16 px-8 md:px-16 flex flex-col gap-8 flex-1">
+        
+        {% if highest_bid.buyer == user and not is_listing_active %}
+            <h2 class="text-3xl uppercase font-mono font-extrabold text-red-700">Congratulations {{ user }}, you won this auction!</h2>
+        {% endif %}
+
+        {% if not is_listing_active %}
+            <h2 class="text-3xl uppercase font-mono font-extrabold text-black">This auction ended</h2>
+        {% endif %}
+
+        <section class="flex flex-col gap-8">
+            <div class="flex flex-row gap-8">
+
+                {% if user.is_authenticated %}
                 <form action="{% url 'listing' listing.id %}" method="post">
                     {% csrf_token %}
-                    {{ end_form }}
-                    <input type="submit" value="End Auction">
+                    {{ wishlist_form }}
+
+                    {% if wishlist %}
+                        <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="Remove from Wishlist">
+                    {% else %}
+                        <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="Add to Wishlist">
+                    {% endif %}
+
                 </form>
-            {% endif %}
-        {% endif %}
-        <h3>{{ listing.title }}</h3>
-        <div>
-            <p>Category: {{ listing.category }}</p>
-            <div>
-                {% if listing.image %}
-                    <img src="{{ listing.image }}" alt="{{ listing.title }}">
-                {% else %}
-                    <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+
+                    {% if listing.seller == user and is_listing_active %}
+
+                    <form action="{% url 'listing' listing.id %}" method="post">
+                        {% csrf_token %}
+                        {{ end_form }}
+                        <input class="bg-red-900 border-red-800 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-red-800 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="End Auction">
+                    </form>
+
+                    {% endif %}
                 {% endif %}
+                
             </div>
-            {% if listing.description %}
-                <section>
-                    <h4>Description</h4>
+            <section class="flex flex-col gap-8">
+                <h3 class="text-3xl uppercase font-mono font-extrabold text-black">{{ listing.title }}</h3>
+                <p class="uppercase">Category > <a class="font-bold" href="{% url 'categories_query' listing.category %}">{{ listing.category }}</a></p>
+                <div class="w-full h-[32rem] bg-blue-50 shadow-lg border rounded-xl overflow-hidden">
+
+                    {% if listing.image %}
+                        <img class="w-full h-[32rem] object-contain rounded-xl" src="{{ listing.image }}" alt="{{ listing.title }}">
+                    {% else %}
+                        <img class="w-full h-[32rem] object-contain rounded-xl" src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                    {% endif %}
+
+                </div>
+
+                {% if listing.description %}
+
+                <section class="flex flex-col gap-4">
+                    <h4 class="text-xl uppercase font-mono font-extrabold text-black">Description</h4>
                     <p>{{ listing.description }}</p>
                 </section>
-            {% endif %}
-            <section>
-                <h4>Details</h4>
-                <ul>
-                    <li>Item reference: {{ listing.id }}</li>
-                    <li>Seller: {{ listing.seller }}</li>
-                    <li>Auction start: {{ listing.start }}</li>
-                    <li>Auction end: {{ listing.end }}</li>
-                </ul>
-                {% if highest_bid %}
-                    <p>Highest bid: £{{ highest_bid.bid|floatformat:2 }}</p>
-                    <p>Buyer: {{ highest_bid.buyer }}</p>
-                {% else %}
-                    <p>Starting Price: £{{ listing.start_price|floatformat:2 }}</p>
+
                 {% endif %}
-            </section>
-        </div>
-    </section>
-    <section>
-        {% if is_listing_active %}
-            <h3>Enter your bid</h3>
-            <form action="{% url 'listing' listing.id %}" method="post">
-                {% csrf_token %}
-                {{ bid_form }}
-                {% if error_message %}
-                    <ul class="errorlist">
-                        <li>{{ error_message }}</li>
+
+                <section class="flex flex-col gap-4">
+                    <h4 class="text-xl uppercase font-mono font-extrabold text-black">Details</h4>
+                    <ul class="flex flex-col gap-2">
+                        <li>Item reference: <span class="font-bold">{{ listing.id }}</span></li>
+                        <li>Seller: <span class="font-bold">{{ listing.seller }}</span></li>
+                        <li>Auction start: <span class="font-bold">{{ listing.start }}</span></li>
+                        <li>Auction end: <span class="font-bold">{{ listing.end }}</span></li>
+
+                        {% if highest_bid %}
+                            <li>Highest bid: <span class="font-bold">£{{ highest_bid.bid|floatformat:2 }}</span></li>
+                            <li>Buyer: <span class="font-bold">{{ highest_bid.buyer }}</span></li>
+                        {% else %}
+                            <li>Starting Price: <span class="font-bold">£{{ listing.start_price|floatformat:2 }}</span></li>
+                        {% endif %}
+
                     </ul>
-                {% endif %}
-                <input type="submit" value="Place bid">
-            </form>
-        {% endif %}
-    </section>
-    <section>
-        <h3>Comments</h3>
-        <div>
+                </section>
+            </section>
+        </section>
+        <section class="flex flex-col gap-4">
+
+            {% if is_listing_active %}
+                <h3 class="text-xl uppercase font-mono font-extrabold text-black">Enter your bid</h3>
+                <form class="customform" action="{% url 'listing' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{ bid_form }}                    
+                    <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="Place bid">
+
+                    {% if error_message %}
+                        <ul class="errorlist">
+                            <li>{{ error_message }}</li>
+                        </ul>
+                    {% endif %}
+
+                </form>
+            {% endif %}
+
+        </section>
+        <section class="flex flex-col gap-4">
+            <h3 class="text-xl uppercase font-mono font-extrabold text-black">Comments</h3>
+            <div class="flex flex-col gap-4">
+
             {% for comment in comments %}
-                <div>
-                    <div>{{ comment.user }} on {{ comment.date }}, wrote:</div>
-                    <p>{{ comment.content }}</p>
+                <div class="bg-slate-50 border-cyan-800 border rounded-xl shadow-xl p-4 flex flex-col gap-2">
+                    <p class="font-bold">{{ comment.user }} on {{ comment.date }}, wrote:</p>
+                    <p class="italic">{{ comment.content }}</p>
                 </div>
             {% empty %}
-                <p>No one left a comment yet.</p>
+                <p class="font-bold">No one left a comment yet.</p>
             {% endfor %}
-        </div>
-        {% if user.is_authenticated and is_listing_active %}
-            <form action="{% url 'listing' listing.id %}" method="post">
-                {% csrf_token %}
-                {{ comment_form }}
-                <input type="submit" value="Add Comments">
-            </form>
-        {% elif is_listing_active %}
-            <p>You must be logged in to leave a comment.</p>
-        {% endif %}
+
+            </div>
+
+            {% if user.is_authenticated and is_listing_active %}
+                <form class="customform" action="{% url 'listing' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{ comment_form }}
+                    <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="Add Comments">
+                </form>
+            {% elif is_listing_active %}
+                <p class="font-bold uppercase mt-8">You must be logged in to leave a comment.</p>
+            {% endif %}
+
+        </section>
     </section>
 {% endblock %}

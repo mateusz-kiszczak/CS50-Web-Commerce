@@ -2,39 +2,47 @@
 {% load static %}
 
 {% block body %}
-    <h2>Wishlist</h2>
-    {% if user.is_authenticated %}
-        <h3>Your wishlist</h3>
-    {% else %}
-        <h3>You must be logged in to see your wishlist</h3>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Register</a>
-    {% endif %}
-    <div>
-        {% for wish in wishlist %}
-        <div>
-            <a href="{% url 'listing' wish.item.id %}">
-                <div>
-                    {% if wish.item.image %}
-                        <img src="{{ wish.item.image }}" alt="{{ wish.item.title }}">
-                    {% else %}
-                        <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
-                    {% endif %}
-                </div>
-                <div>
-                    <p>{{ wish.item.title }}</p>
-                    <p>{{ wish.item.description }}</p>
-                    <p>{{ wish.item.seller }}</p>
-                    {% if wish.item.current_price %}
-                        <p>Current Price: £{{ wish.item.current_price|floatformat:2 }}</p>
-                    {% else %}
-                        <p>Current Price: £{{ wish.item.start_price|floatformat:2 }}</p>
-                    {% endif %}
-                </div>
-            </a>
+    <section class="w-full lg:max-w-6xl mx-auto py-16 px-8 md:px-16 flex flex-col gap-8 flex-1">
+        <h2 class="text-3xl uppercase font-mono font-extrabold text-black">Wishlist</h2>
+        {% if user.is_authenticated %}
+            <h3 class="text-2xl uppercase font-mono text-black">Your wishlist</h3>
+        {% else %}
+            <h3 class="text-3xl uppercase font-mono text-black">You must be logged in to see your wishlist</h3>
+            <div class="flex flex-row gap-8">
+                <a class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md" href="{% url 'login' %}">Login</a>
+                <a class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md" href="{% url 'register' %}">Register</a>
+            </div>
+        {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for wish in wishlist %}
+            <div class="bg-blue-50 border-cyan-800 transition-all hover:border-teal-800 hover:bg-teal-50 border-4 rounded-xl shadow-xl overflow-hidden">
+                <a class="flex flex-col h-full" href="{% url 'listing' wish.item.id %}">
+                    <div class="bg-slate-50 shadow-md">
+                        {% if wish.item.image %}
+                            <img class="object-cover h-48 w-full" src="{{ wish.item.image }}" alt="{{ wish.item.title }}">
+                        {% else %}
+                            <img class="object-cover h-48 w-full" src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                        {% endif %}
+                    </div>
+                    <div class="p-4 flex flex-col gap-8 flex-1">
+                        <p class="text-2xl font-semibold">{{ wish.item.title }}</p>
+                        <p>{{ wish.item.description }}</p>
+                        <div class="flex flex-col justify-end gap-4 flex-1">
+                            <p class="font-semibold">{{ wish.item.seller }}</p>
+                            {% if wish.item.current_price %}
+                                <p class="font-bold text-xl">Current Price: £{{ wish.item.current_price|floatformat:2 }}</p>
+                            {% else %}
+                                <p class="font-bold text-xl">Current Price: £{{ wish.item.start_price|floatformat:2 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+                {% if user.is_authenticated %}
+                    <h4 class="text-xl uppercase font-mono font-extrabold text-black">Your wishlist is empty</h4>
+                {% endif %}
+            {% endfor %}
         </div>
-        {% empty %}
-            <p>Your wishlist is empty</p>
-        {% endfor %}
-    </div>
+    </section>
 {% endblock %}

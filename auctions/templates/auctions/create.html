@@ -1,16 +1,28 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create a listing</h2>
+
+<section class="w-full lg:max-w-6xl mx-auto py-16 px-8 md:px-16 flex flex-col gap-8 flex-1">
+    <h2 class="text-3xl uppercase font-mono font-extrabold text-black">Create a listing</h2>
+
     {% if user.is_authenticated %}
-        <form action="{% url 'create' %}" method="post">
+
+        <form class="customform" action="{% url 'create' %}" method="post">
             {% csrf_token %}
             {{ create_form }}
-            <input type="submit" value="Create Listings">
+            <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md cursor-pointer" type="submit" value="Create Listings">
         </form>
+
     {% else %}
-        <h3>You must have an account to create listing</h3>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Register</a>
+
+        <h3 class="text-3xl uppercase font-mono text-black">You must have an account to create a listing</h3>
+        <div class="flex flex-row gap-8">
+            <a class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md" href="{% url 'login' %}">Login</a>
+            <a class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md" href="{% url 'register' %}">Register</a>
+        </div>
+
     {% endif %}
+    
+</section>
+
 {% endblock %}

@@ -311,6 +311,11 @@ def listing(request, listing_id):
             bid_valid = False
             error_message = "Your con NOT bid your own auction"
 
+        # Buyer can not bid before auction started
+        if listing.start > timezone.now():
+            bid_valid = False
+            error_message = "Auction has not started yet"
+
         if form.is_valid() and bid_valid:
             # Clean input data
             bid = form.cleaned_data["bid"]

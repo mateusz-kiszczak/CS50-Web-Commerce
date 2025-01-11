@@ -2,13 +2,18 @@
 
 {% block body %}
 
-    <h2>Login</h2>
+<section class="w-full lg:max-w-6xl mx-auto py-16 px-8 md:px-16 flex flex-col gap-8 flex-1">
+    <h2 class="text-3xl uppercase font-mono font-extrabold text-black">Login</h2>
 
     {% if message %}
-        <div>{{ message }}</div>
+
+        <ul class="errorlist">
+            <li>{{ message }}</li>
+        </ul>
+        
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
+    <form class="customform" action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
             <input autofocus class="form-control" type="text" name="username" placeholder="Username">
@@ -16,9 +21,11 @@
         <div class="form-group">
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
-        <input class="btn btn-primary" type="submit" value="Login">
+        <input class="bg-cyan-900 border-cyan-600 text-white uppercase font-bold px-8 py-2 transition-all hover:bg-teal-800 hover:text-lime-200 border-2 rounded-xl shadow-md" class="btn btn-primary" type="submit" value="Login">
     </form>
-
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    
+    <p>Don't have an account? <a class="font-bold uppercase" href="{% url 'register' %}">Register here.</a></p>
+    
+</section>
 
 {% endblock %}

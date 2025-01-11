@@ -2,29 +2,34 @@
 {% load static %}
 
 {% block body %}
-    <section>
-        <h2>Active Listings</h2>
-        <div>
+    <section class="lg:max-w-6xl mx-auto py-16 px-8 md:px-16 flex flex-col gap-8 flex-1">
+        <h2 class="text-3xl uppercase font-mono font-extrabold text-black">Active Listings</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">    
             {% for listing in listings %}
-                <a href="{% url 'listing' listing.id %}">
-                    <div>
-                        {% if listing.image %}
-                            <img src="{{ listing.image }}" alt="{{ listing.title }}">
-                        {% else %}
-                            <img src="{% static 'img/no_img.jpg' %}" alt="No image availible">
-                        {% endif %}
-                    </div>
-                    <div>
-                        <p>{{ listing.title }}</p>
-                        <p>{{ listing.description }}</p>
-                        <p>{{ listing.seller }}</p>
-                        {% if listing.current_price %}
-                            <p>Current Price: £{{ listing.current_price|floatformat:2 }}</p>
-                        {% else %}
-                            <p>Current Price: £{{ listing.start_price|floatformat:2 }}</p>
-                        {% endif %}
-                    </div>
-                </a>
+            <!-- on hover lime color and border -->
+                <div class="bg-blue-50 border-cyan-800 transition-all hover:border-teal-800 hover:bg-teal-50 border-4 rounded-xl shadow-xl overflow-hidden">
+                    <a class="flex flex-col h-full" href="{% url 'listing' listing.id %}">
+                        <div class="bg-slate-50 shadow-md">
+                            {% if listing.image %}
+                                <img class="object-cover h-48 w-full" src="{{ listing.image }}" alt="{{ listing.title }}">
+                            {% else %}
+                                <img class="object-cover h-48 w-full" src="{% static 'img/no_img.jpg' %}" alt="No image availible">
+                            {% endif %}
+                        </div>
+                        <div class="p-4 flex flex-col gap-8 flex-1">
+                            <h3 class="text-2xl font-semibold">{{ listing.title }}</h3>
+                            <p>{{ listing.description }}</p>
+                            <div class="flex flex-col justify-end gap-4 flex-1">
+                                <p class="font-semibold">Seller: {{ listing.seller }}</p>
+                                {% if listing.current_price %}
+                                    <p class="font-bold text-xl">Current Price: £{{ listing.current_price|floatformat:2 }}</p>
+                                {% else %}
+                                    <p class="font-bold text-xl">Current Price: £{{ listing.start_price|floatformat:2 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     </section>

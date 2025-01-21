@@ -278,6 +278,11 @@ const loadEmail = (emailId) => {
       document.getElementById('email-unarchive').style.display = 'block';
     }
 
+    if (sessionStorage.getItem("mailbox") === 'sent') {
+      document.getElementById('email-archive').style.display = 'none';
+      document.getElementById('email-unarchive').style.display = 'none';
+    }
+
     // Add event listener to REPLY button and pass email's details
     document.getElementById('email-reply').addEventListener('click', () => {
       let replyObj = {
